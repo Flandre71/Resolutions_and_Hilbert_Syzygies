@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz-cd}
+\usepackage{geometry}
+\usepackage{microtype} % Fixes most Overfull \hbox warnings in text
+\usepackage{xurl}      % Allows URLs to line-break anywhere
+\usepackage{hyperref}
+\usepackage{bookmark}  % Fixes the outline rerun warning
+
+\geometry{a4paper, margin=1in}
+
+% Custom Math Operators
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\ImOp}{Im} % Avoid conflict with standard \Im
+\DeclareMathOperator{\Coker}{Coker}
+\DeclareMathOperator{\Tor}{Tor}
+\DeclareMathOperator{\Pd}{Pd}
+\DeclareMathOperator{\GLdim}{GLdim}
+\DeclareMathOperator{\Dim}{Dim}
+
+% Theorem Environments (Sharing the same counter based on section)
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title{Resolutions and Hilbert's Syzygy Theorem}
+\author{Flandre}
+\date{23 Mar 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{\S 0: Bibliography}
+\begin{itemize}
+    \item[] Eisenbud: 
+    \textcircled{1} \textit{Commutative algebra with a view towards Algebraic Geometry} \\
+    \textcircled{2} \textit{The geometry of syzygies}
+    \item[] M. Atiyah: \textcircled{1} \textit{Introduction to Commutative Algebra}
+    \item[] Flandre71: \textcircled{1} \url{https://github.com/Flandre71/Introduction-to-Commutative-Algebra_Solutions/}
+\end{itemize}
+
+\renewcommand{\contentsname}{Content:}
+\tableofcontents
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section{Free Resolutions}
+
+\begin{definition}
+    A sequence $M'' \xrightarrow{\psi} M \xrightarrow{\varphi} M'$ is \underline{exact}, if $\ImOp \psi = \Ker \varphi$.
+\end{definition}
+
+\begin{definition}
+    \underline{Short exact sequence} is a following exact sequence:
+    $$ 0 \to M'' \to M \to M' \to 0 $$
+\end{definition}
+
+\begin{remark}
+    For module homomorphism $\varphi: M \to M'$:
+    \begin{enumerate}
+        \item[i)] $\varphi$ injective $\iff 0 \to M \xrightarrow{\varphi} M'$ exact
+        \item[ii)] $\varphi$ surjective $\iff M \xrightarrow{\varphi} M' \to 0$ exact
+    \end{enumerate}
+\end{remark}
+
+Generally, we want to discuss the properties of a specific module $M$. Some algebraist figured out a way to treat $M$ as a quotient, discuss.
+
+Recall that every finitely generated module $M$ has the form
+$$
+M \cong F_0 / K_0
+$$
+where $F_0$ is a finitely generated free $R$-module and $K_0$ is an $R$-module. Since $F_0$ is finitely generated and $R$ is Noetherian, the submodule $K_0 \subseteq F_0$ is also finitely generated.
+
+This implies that we can write
+$$
+K_0 \cong F_1 / K_1
+$$
+where $F_1$ is a finitely generated free $R$-module and $K_1$ is an $R$-module.
+
+Since $K_1$ is again finitely generated, we can iterate this process. This constructs a sequence:
+$$
+\cdots \to F_n \xrightarrow{\varphi_n} F_{n-1} \to \cdots \to F_1 \xrightarrow{\varphi_1} F_0 \to 0
+$$
+where each map $\varphi_n$ factors as $F_n \twoheadrightarrow F_n / K_n \cong K_{n-1} \hookrightarrow F_{n-1}$.
+
+\begin{definition}
+    A \underline{free resolution} of $M$, not necessarily finitely generated, is the sequence of $\{F_k\}$, denoted by $\mathcal{F}$, s.t.
+    $$ \mathcal{F}: \cdots \to F_n \xrightarrow{\varphi_n} F_{n-1} \to \cdots \to F_1 \xrightarrow{\varphi_1} F_0 $$
+    exact and $\Coker \varphi_1 \cong M$.
+\end{definition}
+
+\begin{definition}
+    Here $\varphi: M \to N$,
+    the \underline{cokernel} is defined by $\Coker \varphi = N / \ImOp \varphi$.
+\end{definition}
+
+\begin{definition}
+    If $\exists n \in \mathbb{Z}^+$, s.t. $F_n=0$ and $F_{n-1}\neq 0$, we say $\mathcal{F}$ is a \underline{finite resolution of length $n$}.
+\end{definition}
+
+\begin{definition}
+    We call $\ImOp \varphi_k$ \underline{the $k$-th syzygies of $M$}.
+\end{definition}
+
+In the study of an unknown mathematical object, it's always a good approach to study some of its property, which becomes invariant under specific condition. 
+In our specific case of module, we introduced ``free resolution'', from which various beautiful properties can be obtained.
+
+\begin{theorem}[Hilbert Syzygy Theorem] [Eisenbud, 1: Thm 1.13]
+    For $R = k[x_1, \dots, x_n]$, any finitely generated graded $R$-module has a finite free resolution
+    $$ 0 \to F_m \xrightarrow{\varphi_m} F_{m-1} \to \cdots \to F_1 \xrightarrow{\varphi_1} F_0 $$
+    Moreover, we may take $m \le n$.
+\end{theorem}
+\begin{proof}
+    C.f. [Eisenbud, 1: Chap 15 \& Chap 19.]
+\end{proof}
+
+\begin{example}[Koszul Complex]
+    $$ \begin{aligned}
+        K(x_1)&: \quad 0 \to R(-1) \xrightarrow{\left[\begin{smallmatrix} x_1 \end{smallmatrix}\right]} R \\
+        K(x_1, x_2)&: \quad 0 \to R(-2) \xrightarrow{\left[\begin{smallmatrix} x_2 \\ -x_1 \end{smallmatrix}\right]} R^2(-1) \xrightarrow{\left[\begin{smallmatrix} x_1 & x_2 \end{smallmatrix}\right]} R \\
+        K(x_1, x_2, x_3)&: \quad 0 \to R(-3) \xrightarrow{\left[\begin{smallmatrix} x_1 \\ x_2 \\ x_3 \end{smallmatrix}\right]} R^3(-2) \xrightarrow{\left[\begin{smallmatrix} 0 & x_3 & -x_2 \\ -x_3 & 0 & x_1 \\ x_2 & -x_1 & 0 \end{smallmatrix}\right]} R^3(-1) \xrightarrow{\left[\begin{smallmatrix} x_1 & x_2 & x_3 \end{smallmatrix}\right]} R
+    \end{aligned} $$
+\end{example}
+
+\begin{lemma}[Atiyah, 1: Proposition 2.11]
+    Any commutative ring $R$,
+    For exact sequence $0 \to M_n \to M_{n-1} \to \cdots \to M_1 \to 0$ of $R$-modules, for any additive function $\lambda$ acting on $R$-modules, we have:
+    $$ \sum_{k=0}^n (-1)^k \lambda(M_k) = 0 $$
+\end{lemma}
+
+\begin{corollary}[Hilbert Functions] [Eisenbud, 2: Corollary 1.2]
+    For $R = k[x_1, \dots, x_n]$, graded $R$-module $M$. If $M$ has finite free resolution
+    $$ 0 \to F_m \to F_{m-1} \to \cdots \to F_1 \to F_0 $$
+    where each $F_k$ is finitely generated free module $F_k = \bigoplus_i S(-a_{k,i})$, then
+    $$ H_M(d) = \sum_{k=0}^m (-1)^k \sum_i \binom{n+d-a_{k,i}-1}{n-1} $$
+\end{corollary}
+\begin{proof}
+    By Lemma 1.10, trivial.
+\end{proof}
+
+From last lecture, we know if $d$ is ``big enough'', $H_M(d)$ will conform to a polynomial, namely ``Hilbert polynomial''.
+From Corollary 1.11, we may guarantee the following:
+
+\begin{corollary}[Eisenbud, 2: Corollary 1.3]
+    From Corollary 1.11, if $d \ge \max\{1 + a_{i,j} - n\}$, $H_M(d) = P_M(d)$ conforms to the Hilbert Polynomial.
+\end{corollary}
+
+\section{Minimal Free Resolutions}
+
+\begin{definition}
+    \underline{A complex of $R$-modules} is a sequence $\{F_k\}_{k \in \mathbb{Z}}$ of $R$-modules
+    $$ \cdots \to F_{k+1} \to F_k \to F_{k-1} \to \cdots $$
+    such that $\forall k \in \mathbb{Z}$, compositions $F_{k+1} \to F_k \to F_{k-1}$ are all zero maps.
+\end{definition}
+
+\begin{definition}
+    The \underline{homology} of this complex at $F_k$ is
+    $$ H_k = \Ker(F_k \to F_{k-1}) / \ImOp(F_{k+1} \to F_k) $$
+    We say $F_k$ \underline{doesn't have homology} if $H_k = 0$.
+\end{definition}
+
+\begin{definition}
+    $R = k[x_1, \dots, x_n]$, a complex of $R$-modules
+    $$ \cdots \to F_k \xrightarrow{\varphi_k} F_{k-1} \to \cdots $$
+    is \underline{minimal} if for each $k$, $\ImOp \varphi_k \subseteq \mathfrak{m} F_{k-1}$.
+    Here $\mathfrak{m} = (x_1, \dots, x_n) = R \setminus k$ is the \underline{homogeneous maximal ideal}, a.k.a, \underline{irrelevant ideal}.
+\end{definition}
+
+\begin{lemma}[Graded Nakayama's Lemma] [Eisenbud, 2: Lemma 1.4]
+    $R = k[x_1, \dots, x_n]$, $M$ is a finitely generated graded $R$-module, $\mathfrak{m}$ irrelevant ideal. Consider the canonical homomorphism $M \to M/\mathfrak{m}M$.
+    For $m_1, \dots, m_n \in M$, if $\langle \bar{m}_1, \dots, \bar{m}_n \rangle = M/\mathfrak{m}M$, then $\langle m_1, \dots, m_n \rangle = M$.
+\end{lemma}
+\begin{proof}
+    Consider $\tilde{M} = M / \sum R m_k$, we'll prove $\tilde{M} = 0$.
+    Since $\{m_1, \dots, m_n\}$ generate $\tilde{M}$, we have $\overline{\tilde{M}} = 0$, i.e.
+    $$ \mathfrak{m}\tilde{M} = \tilde{M} $$
+    Suppose $\tilde{M} \ne 0$, then since it's finitely generated, we consider a least degree term in one of the set of its generators, denoted by $\tilde{m}$.
+    Recall $\mathfrak{m} = R \setminus k$, so any term within has a positive degree.
+    Then $\tilde{m} \notin \mathfrak{m}\tilde{M}$, contradictory!
+\end{proof}
+
+\begin{remark}
+    See the general version of Nakayama's Lemma in [Atiyah, 1: Proposition 2.6].
+\end{remark}
+
+\begin{corollary}[Eisenbud, 2: Corollary 1.5]
+    A graded free resolution
+    $$ \mathcal{F}: \cdots \to F_n \xrightarrow{\varphi_n} F_{n-1} \to \cdots \to F_1 \xrightarrow{\varphi_1} F_0 $$
+    is minimal as a complex iff $\forall k$, the map $\varphi_k$ takes a basis of $F_k$ to a minimal set of generators of $\ImOp \varphi_k$.
+\end{corollary}
+
+To prove this corollary, we need some Lemma first.
+
+\begin{lemma}[Atiyah, 1: Exercise 2.2]
+    For ring $R$ and its ideal $I$, let $M$ be a $R$-module, then
+    $$ M/IM \cong (R/I) \otimes_R M $$
+\end{lemma}
+\begin{proof}
+    Trivial. See [Flandre71, 1: Chap 2].
+\end{proof}
+
+\begin{lemma}[Atiyah, 1: Proposition 2.18]
+    Ring $R$ and $R$-module $N$. If
+    $$ M' \xrightarrow{f} M \xrightarrow{g} M'' \to 0 $$
+    is exact, then
+    $$ M' \otimes N \xrightarrow{f \otimes 1} M \otimes N \xrightarrow{g \otimes 1} M'' \otimes N \to 0 $$
+    is exact. Here $1$ denotes the identity map.
+\end{lemma}
+
+\begin{proof}[Proof of Corollary 2.6]
+    Consider right exact sequence $F_{k+1} \to F_k \to \ImOp \varphi_k \to 0$.
+    By Lemma 2.8,
+    $$ (R/\mathfrak{m}) \otimes_R F_{k+1} \to (R/\mathfrak{m}) \otimes_R F_k \to (R/\mathfrak{m}) \otimes_R \ImOp \varphi_k \to 0 $$
+    is exact. By Lemma 2.7, such sequence is isomorphic to
+    $$ F_{k+1}/\mathfrak{m}F_{k+1} \to F_k/\mathfrak{m}F_k \to \ImOp \varphi_k / \mathfrak{m}\ImOp \varphi_k \to 0 $$
+    $\mathcal{F}$ is minimal iff $\forall k$, $F_{k+1}/\mathfrak{m}F_{k+1} \to F_k/\mathfrak{m}F_k$ is zero map, which is equivalent to say
+    $$ F_k/\mathfrak{m}F_k \to \ImOp \varphi_k / \mathfrak{m}\ImOp \varphi_k $$
+    is an isomorphism. 
+    By Graded Nakayama's Lemma, this is equivalent to say a basis of $F_k$ was mapped to a minimal generating set of $\ImOp \varphi_k$.
+\end{proof}
+
+As we said before, it's always desirable for us to look for invariants when exploring a mathematical concept.
+
+Specifically, in the study of finitely generated graded module of $R = k[x_1, \dots, x_n]$, we'll see minimal graded free resolution is unique under isomorphisms.
+
+\begin{theorem}[Uniqueness of minimal free resolution] [Eisenbud, 2: Theorem 1.6]
+    For $R = k[x_1, \dots, x_n]$, finitely generated graded $R$-module $M$,
+    \begin{enumerate}
+        \item[i)] If $\mathcal{F}, \mathcal{G}$ are minimal free resolutions of $M$, then there exist a graded isomorphism of complex $\mathcal{F} \to \mathcal{G}$, inducing the identity map on $M$.
+        \item[ii)] Every free resolution of $M$, denoted by $\mathcal{H}$, we have
+        $$ \mathcal{H} \cong \mathcal{F} \oplus \mathcal{H}_0 $$
+        where $\mathcal{F}$ is a minimal free resolution, $\mathcal{H}_0$ is a trivial complex.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    See [Eisenbud, 1: Theorem 20.2].
+\end{proof}
+
+One thing worth noticing is that: For any minimal free resolution of a finitely generated graded $R$-module, the number of each degree required for each $F_k$ only depends on $M$! See Theorem 2.12.
+Before that, we need a new definition.
+
+\begin{definition}
+    A \underline{$\Tor$ functor} is a functor in categories of modules, acting by $N \otimes_R - $ where $N$ is a random member. For $R$-module $N$ and its free resolution
+    $$ \cdots \to F_n \xrightarrow{\varphi_n} F_{n-1} \to \cdots \to F_1 \to F_0 \to M \to 0 $$
+    we have
+    $$ \cdots \to F_n \otimes_R N \xrightarrow{\varphi_n \otimes 1} F_{n-1} \otimes_R N \to \cdots \to F_1 \otimes_R N \xrightarrow{\varphi \otimes 1} F_0 \otimes_R N \to 0 $$
+    as a complex, and we define $\Tor_k^R(M, N) = \Ker(\varphi_k \otimes 1) / \ImOp(\varphi_{k+1} \otimes 1)$.
+\end{definition}
+
+\begin{remark}
+    The term ``free resolution'' above can be generalized into projective resolution.
+\end{remark}
+
+\begin{theorem}[Eisenbud, 2: Proposition 1.7] (Its proof has typo!)
+    $R = k[x_1, \dots, x_n]$, finitely generated graded $R$-module $M$ and its minimal free resolution $\mathcal{F}$, irrelevant ideal $\mathfrak{m}$. $\mathbb{K} = R/\mathfrak{m}$ is the residue field, then any minimal set of homogeneous generators of $F_k$ contains exactly
+    $$ \Dim_{\mathbb{K}} \Tor_k^R(\mathbb{K}, M)_i $$
+    generators of degree $i$.
+\end{theorem}
+\begin{proof}
+    $\Tor_k^R(\mathbb{K}, M)_i$ is the degree $i$ component of the graded vector space, which is the $k$-th homology of $\mathbb{K} \otimes_R \mathcal{F}$.
+    
+    Since $\mathcal{F}$ is minimal, by the definition of minimal we know every maps in $\mathbb{K} \otimes_R \mathcal{F}$ is zero map. (Recall that minimality resulting in mapping into $\mathfrak{m}F_k$).
+    Therefore 
+    $$ \begin{aligned}
+        \Tor_k^R(\mathbb{K}, M) &= \Ker(\varphi_k \otimes 1) / \ImOp(\varphi_{k+1} \otimes 1) \\
+        &= \mathbb{K} \otimes_R F_k / 0 \\
+        &= \mathbb{K} \otimes_R F_k \\
+        &\cong F_k / \mathfrak{m}F_k
+    \end{aligned} $$
+    and by graded Nakayama's Lemma, $\Dim_{\mathbb{K}} \Tor_k^R(\mathbb{K}, M)_i$ is the number of $i$-degree generators that $F_k$ required.
+\end{proof}
+
+\section{Projective Dimension and Global Dimension}
+
+\begin{definition}
+    An \underline{epimorphism} $\varphi: X \twoheadrightarrow Y$ in a category is a morphism such that for any object $Z$, there exist at most 1 morphism in $\operatorname{Mor}(Y, Z)$, s.t.
+    $$
+        \begin{tikzcd}
+            X \arrow[r, "\varphi", two heads] \arrow[dr] & Y \arrow[d, dashed, "\le 1"] \\
+            & Z
+        \end{tikzcd}
+    $$
+    commute. i.e., $\varphi$ satisfy the right cancellation law.
+\end{definition}
+
+\begin{definition}
+    A \underline{monomorphism} $\varphi: X \hookrightarrow Y$ is the case in Def 3.1, but all arrows are reversed. i.e. $\varphi$ satisfy the left cancellation law.
+\end{definition}
+
+\begin{remark}
+    All surjections are epimorphisms, all injections are monomorphisms.
+\end{remark}
+
+\begin{definition}
+    A module $P$ is projective if for every epimorphism of module $\alpha: M \twoheadrightarrow N$, and every map $\beta: P \to N$, $\exists \gamma: P \to M$, s.t. $\beta = \alpha \gamma$, i.e.,
+    $$
+        \begin{tikzcd}
+            & P \arrow[dl, dashed, "\exists \gamma"'] \arrow[d, "\beta"] \\
+            M \arrow[r, two heads, "\alpha"'] & N
+        \end{tikzcd}
+    $$
+    commute.
+\end{definition}
+
+\begin{definition}
+    Ring $R$, a \underline{projective resolution} of $R$-module is a complex
+    $$ \mathcal{P}: \cdots \to P_n \xrightarrow{\varphi_n} P_{n-1} \to \cdots \to P_1 \xrightarrow{\varphi_1} P_0 $$
+    of projective $R$-module, s.t. $M = \Coker \varphi_1$ and $\mathcal{P}$ is exact.
+    Its \underline{length} is defined in the same way as the one in free resolutions.
+\end{definition}
+
+\begin{definition}
+    Ring $R$, we define the \underline{projective dimension} of a $R$-module $M$, denoted by $\Pd_R M$, to be the minimum of lengths of projective resolutions ($\Pd_R M = \infty$ if $M$ has no finite projective resolution).
+\end{definition}
+
+\begin{definition}
+    A ring is \underline{local} if it only has one maximal ideal.
+\end{definition}
+
+\begin{remark}
+    $R = k[x_1, \dots, x_n]$ is graded local, since it has the unique maximal ideal, namely the irrelevant ideal.
+\end{remark}
+
+\begin{theorem}
+    Local ring $R$, $\mathbb{K} = R/\mathfrak{m}$ is the residue field, $M$ is finitely generated nonzero $R$-module, then: $\forall k > \Pd_R M$, $\Tor_k^R(M, \mathbb{K}) = 0$.
+\end{theorem}
+\begin{proof}
+    Trivial.
+    $$ k > \Pd_R M \implies F_k = 0 \implies \Tor_k^R(M, \mathbb{K}) = \Ker \varphi_k / \ImOp \varphi_{k+1} = 0 $$
+\end{proof}
+
+\begin{theorem}[Eisenbud, 2: Corollary 1.8]
+    $R = k[x_1, \dots, x_n]$, $M$ is finitely generated graded $R$-module. Then
+    $$ \text{length of the minimal free resolution} = \text{projective dimension} $$
+\end{theorem}
+\begin{proof}
+    \begin{enumerate}
+        \item[i)] On one hand, a free resolution is projective resolution, so
+        $$ \text{length of minimal free resolution} \ge \text{projective dimension} $$
+        \item[ii)] On the other hand, $\forall k > \Pd_R M$, $\Tor_k^R(\mathbb{K}, M) = 0$, meaning $F_k = 0$. Hence
+        $$ \text{length of minimal free resolution} \le \text{projective dimension} $$
+    \end{enumerate}
+    Done.
+\end{proof}
+
+\begin{definition}
+    The \underline{global dimension} of ring $R$, denoted by $\GLdim R$, is the supremum of the projective dimensions of all $R$-modules.
+\end{definition}
+
+\begin{lemma}[Eisenbud, 1: Theorem 19.1]
+    On ring $R$, the following are equivalent:
+    \begin{enumerate}
+        \item[i)] $\GLdim R \le n$
+        \item[ii)] $\forall R\text{-module } M$, $\Pd M \le n$
+        \item[iii)] $\forall \text{ finitely generated } R\text{-module } M$, $\Pd M \le n$
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    See [Eisenbud, 1: Theorem A3.18].
+\end{proof}
+
+\begin{corollary}
+    $\forall$ local ring $R$, $\mathbb{K} = R/\mathfrak{m}$ being its residue field, we have
+    $$ \GLdim R = \Pd_R \mathbb{K} $$
+\end{corollary}
+\begin{proof}
+    $\forall$ finitely generated graded $R$-module $M$, we have $\forall k \in \mathbb{Z}^+$,
+    $$ \Tor_k^R(\mathbb{K}, M) \cong \Tor_k^R(M, \mathbb{K}) $$
+    So we may compute $\Tor_k^R(\mathbb{K}, M)$ from a projective resolution of $\mathbb{K}$ as well.
+
+    Therefore by Theorem 3.9, $\forall k > \Pd_R \mathbb{K}$, $\Tor_k^R(M, \mathbb{K}) = 0$.
+    Hence $\Pd_R \mathbb{K} \ge \Pd_R M$.
+    Since $M$ was arbitrarily chosen, by Lemma 3.12, $\Pd_R \mathbb{K} \ge \GLdim R$
+    $$ \implies \Pd_R \mathbb{K} = \GLdim R. $$
+\end{proof}
+
+\begin{remark}
+    (3.9), (3.10), (3.13) was put together in [Eisenbud, 1: Corollary 19.5] and called ``homological version of Nakayama's Lemma''.
+
+    The general Nakayama's Theorem states that: for local ring $R$ and its unique maximal ideal $\mathfrak{m}$, and residue field $\mathbb{K}$,
+    we have
+    $$
+    M / \mathfrak{m}M=0\implies M=0
+    $$
+    Notice $M / \mathfrak{m}M\cong \mathbb{K}\otimes _{R}M\cong\Tor_{0}^{R}(\mathbb{K},M)$.
+    So we can restated the General Nakayama's Lemma as:
+    $$
+    \text{The module }M\text{ vanish iff }\Tor_{0}^{R}(\mathbb{K},M)=0.
+    $$
+
+    On the other hand, we know a free resolution is minimal 
+    iff every maps (differentials) maps a basis of the free module to a minimal generators of its image, a.k.a. the $k$-th syzygies.
+
+    Therefore the homological version (which turns out to be a more general version of the general nakayama's Lemma) tells us that 
+    $$
+    \text{The }(k+1)\text{-th syzygy of }M\text{ vanish iff }\Tor_{k+1}^{R}(\mathbb{K},M)=0.
+    $$
+    
+\end{remark}
+
+\end{document}
